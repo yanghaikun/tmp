@@ -1,0 +1,10 @@
+# IDEA artifacts and output dirs
+.idea
+*.iml
+*.ipr
+*.iws
+
+.gradle
+build
+target
+out
