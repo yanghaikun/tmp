@@ -1,5 +1,9 @@
 package net.rlair.flight.entity;
 
+import net.rlair.flight.repository.AirplaneRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.PostConstruct;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,8 +17,8 @@ import java.sql.Date;
  * @author Yang Haikun
  */
 @Entity
-@Table(name = "t_flight")
-public class Flight implements Serializable{
+@Table(name = "t_airplane")
+public class Airplane implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -22,24 +26,8 @@ public class Flight implements Serializable{
     private long id;
 
     @Column
-    private String flightNumber;
+    private String model;   //机型
 
     @Column
-    private String airplane;
-
-    @Column
-    private String originCity;
-
-    @Column
-    private String destinationCity;
-
-    @Column
-    private String departureTime;
-
-    @Column
-    private String arrivalTime;
-
-    @Column
-    private Date beginTime;
-
+    private String sn;          //机号
 }

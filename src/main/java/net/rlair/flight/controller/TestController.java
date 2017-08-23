@@ -1,4 +1,4 @@
-package net.rlair.flight.test;
+package net.rlair.flight.controller;
 
 import net.rlair.flight.entity.FlightPlan;
 import net.rlair.flight.repository.FlightPlanRepository;

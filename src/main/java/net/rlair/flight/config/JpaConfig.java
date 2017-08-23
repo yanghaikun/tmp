@@ -19,9 +19,7 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
 //此处是你dao文件所在的包名
-@Import(DBConfig.class)
 @EntityScan(basePackages={"net.rlair.flight.entity"})
 @EnableJpaRepositories(basePackages = {"net.rlair.flight.repository"})
 @EnableTransactionManagement
@@ -43,6 +41,7 @@ public class JpaConfig {
         Map<String, Object> jpaProperties = new HashMap<String, Object>();
         jpaProperties.put("hibernate.ejb.naming_strategy","org.hibernate.cfg.ImprovedNamingStrategy");
         jpaProperties.put("hibernate.jdbc.batch_size",50);
+        jpaProperties.put("hibernate.ddl-auto", true);
 
         factory.setJpaPropertyMap(jpaProperties);
         factory.afterPropertiesSet();
