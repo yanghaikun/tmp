@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableAutoConfiguration
 //@Import(JpaConfig.class)
-@ComponentScan(basePackages = {"net.rlair.flight.test"})
+@ComponentScan(basePackages = {"net.rlair.flight.controller*"})
 @EntityScan(basePackages={"net.rlair.flight.entity"})
 @EnableJpaRepositories(basePackages = {"net.rlair.flight.repository"})
 public class ApplicationConfig {
