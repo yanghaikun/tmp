@@ -7,8 +7,7 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="shortcut icon" href="${(serverPath)!}/static/css/images/favicon.ico"/>
-    <!-- Bootstrap 3.3.7 -->
-    <link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap.min.css">
+
 
     <!-- Theme style -->
     <link rel="stylesheet" href="/adminLTE/css/AdminLTE.min.css">
@@ -16,11 +15,7 @@
          folder instead of downloading all of them to reduce the load. -->
     <!--<link rel="stylesheet" href="dist/css/skins/_all-skins.min.css"> -->
     <link rel="stylesheet" href="/adminLTE/css/skins/skin-blue.min.css">
-    <!-- DataTables -->
-    <link rel="stylesheet" href="/dataTables/css/jquery.dataTables.min.css">
 
-    <!-- layer css 3.-->
-    <link rel="stylesheet" href="/layer/skin/default/layer.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -29,7 +24,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script>
-        var serverPath = "${(serverPath)!}";
+        var serverPath = "${(serverPath)}";
     </script>
 
 </head>
@@ -49,20 +44,18 @@
                     <!-- Horizontal Form -->
                     <div class=" box box-info">
                         <div class="box-header with-border">
-                            <h3 class="box-title">添加字段</h3>
+                            <h3 class="box-title">航线计划（通知单）</h3>
                         </div>
                         <!-- /.box-header -->
 
                         <div class="box-body">
                             <div class="row">
-                                <div class="col-sm-1">
-                                    <label for="fieldName" class="control-label">分类名</label>
+                                <div class="col-lg-1 col-md-2 col-sm-4">
+                                    <button id="addFlightPlanBtn" class="btn btn-info">新增航班</button>
                                 </div>
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="fieldName" placeholder="字段名">
-                                </div>
-                                <div class="col-sm-1">
-                                    <button id="queryBtn" class="btn btn-info">查询</button>
+
+                                <div class="col-lg-1 col-md-2 col-sm-4">
+                                    <button id="queryFlightPlanBtn" class="btn btn-info">查看通知单</button>
                                 </div>
                             </div>
                         </div>
@@ -72,39 +65,25 @@
             </div><!-- /.row -->
 
             <div class="row">
-            <#--  <div class="col-md-1">
-              </div>-->
                 <div class="col-xs-12">
-                    <div class="box">
-                        <div class="box-header">
-                            <div class="col-md-12">
-                                <button class="btn btn-info" id="addBtn"><i class="fa fa-plus-square" aria-hidden="true"></i>新建字段
-                                </button>
-                            </div>
-                        </div>
-
+                    <div class="box-header with-border">
+                        <h3 class="box-title">航班动态</h3>
+                    </div>
                         <div class="box-body">
-                            <table id="dataTable" class="display" width="100%" cellspacing="0">
+                            <table id="flightDataTable" class="display" width="100%" cellspacing="0">
                                 <thead>
                                 <tr>
-                                    <th>字段名</th>
-                                    <th>描述</th>
-                                    <th>字段变量名</th>
-                                    <th>数据库中列名</th>
-                                    <th>数据库中类型</th>
+                                    <th>Id</th>
+                                    <th>日期</th>
+                                    <th>航班号</th>
+                                    <th>运力</th>
+                                    <th>起飞站</th>
+                                    <th>落地站</th>
+                                    <th>起飞时刻</th>
+                                    <th>落地时刻</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
-                                <tfoot>
-                                <tr>
-                                    <th>字段名</th>
-                                    <th>描述</th>
-                                    <th>字段变量名</th>
-                                    <th>数据库中列名</th>
-                                    <th>数据库中类型</th>
-                                    <th>操作</th>
-                                </tr>
-                                </tfoot>
                             </table>
                         </div>
                         <!-- /.box-body -->
@@ -117,24 +96,83 @@
         </section>
 
         <!-- Modal -->
-        <div class="modal fade" id="entityModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="flightPlanModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content" style="margin-top: 35%;">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title" id="myModalLabel">添加/编辑</h4>
+                        <h4 class="modal-title" id="myModalLabel">新增航线计划</h4>
                     </div>
-                    <div class="modal-body" id="entityInfo">
+                    <div class="modal-body" id="flightPlanInfo">
 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
-                        <button type="button" class="btn btn-info" onclick="submit();">保存</button>
+                        <button id = "saveFlightPlanBtn"  type="button" class="btn btn-info">确定</button>
                     </div>
                 </div>
             </div>
         </div>
+
+    <div class="modal fade" id="flightPlanPublishModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="margin-top: 5%;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">航线计划</h4>
+                </div>
+                <div class="modal-body" id="flightPlanPublishInfo">
+                    <div class="box-body">
+                        <table id="flightPlanDataTable" class="display" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>勾选</th>
+                                <th>开始日期</th>
+                                <th>结束</th>
+                                <th>班期</th>
+                                <th>航班号</th>
+                                <th>运力</th>
+                                <th>起飞站</th>
+                                <th>落地站</th>
+                                <th>起飞时刻</th>
+                                <th>落地时刻</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                    <button id="flightPlanPublishBtn" type="button" class="btn btn-info">发布</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="flightModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="margin-top: 35%;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">修改航线</h4>
+                </div>
+                <div class="modal-body" id="flightInfo">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                    <button type="button" class="btn btn-info" onclick="submit();">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
 
     </div>
@@ -154,23 +192,35 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 3 -->
-<script src="/jquery.3.2.1/jquery.min.js"></script>
+<script src="/jquery/3.2.1/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
-<script src="/bootstrap.3.3.7/js/bootstrap.min.js"></script>
+<script src="/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap.min.css">
 
 <!-- AdminLTE App -->
 <script src="/adminLTE/js/adminlte.min.js"></script>
 
 <!--dataTable-->
 <script src="/dataTables/js/jquery.dataTables.min.js"></script>
+<!-- DataTables -->
 <link rel="stylesheet" href="/dataTables/css/jquery.dataTables.min.css">
 
-<!--<script src="./bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script> -->
 <!-- layer独立版 3.0.0 -->
 <script src="/layer/layer.js"></script>
+<!-- layer css 3.-->
+<link rel="stylesheet" href="/layer/skin/default/layer.css">
+
+<link rel="stylesheet" href="/datetimepicker/bootstrap-datetimepicker.min.css">
+<script src="/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<script src="/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
 
 
 <script src="/js/common.js"></script>
+<script src="/js/flight.js"></script>
 
 <script>
 </script>

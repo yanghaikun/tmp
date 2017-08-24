@@ -21,6 +21,10 @@ public class FlightPlan implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    //班期
+    @Column
+    private String schedule;
+
     //航班号
     @Column
     private String flightNumber;
@@ -29,11 +33,11 @@ public class FlightPlan implements Serializable{
     @Column
     private String airplane;
 
-    //出发城市
+    //起飞站
     @Column
     private String originCity;
 
-    //到达城市
+    //落地站
     @Column
     private String destinationCity;
 

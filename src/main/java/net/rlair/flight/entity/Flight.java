@@ -21,24 +21,45 @@ public class Flight implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    /**
+     * 航班号
+     */
     @Column
     private String flightNumber;
 
+    /**
+     * 机型
+     */
     @Column
     private String airplane;
 
+    /**
+     * 起飞城市
+     */
     @Column
     private String originCity;
 
+    /**
+     * 落地城市
+     */
     @Column
     private String destinationCity;
 
+    /**
+     * 起飞时间
+     */
     @Column
     private String departureTime;
 
+    /**
+     * 到达时间
+     */
     @Column
     private String arrivalTime;
 
+    /**
+     * 开始时间
+     */
     @Column
     private Date beginTime;
 
