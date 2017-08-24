@@ -84,7 +84,9 @@ function createFlightPlanDataTable() {
             {   orderable: false,
                 targets: 0,
                 render: function(td, cellData, rowData) {
+                if(rowData != undefine) {
                     return '<input type="checkbox" id="' + rowData.id + '">';
+                }
                 }
             },
             {

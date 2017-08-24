@@ -1,5 +1,8 @@
 package net.rlair.flight.controller;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.rlair.flight.common.ServiceResult;
 import net.rlair.flight.entity.Flight;
 import net.rlair.flight.entity.FlightPlan;
@@ -17,6 +20,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Yang Haikun
@@ -81,8 +87,15 @@ public class IndexController {
     @RequestMapping(value = "/flightPlan/publish")
     @ResponseBody
     ServiceResult flightPlanPublish(@RequestParam(value = "data", defaultValue = "[]") final String data){
-
         Log.FLIGHT.info("发布航班动态: data={}", data);
+        //TODO
+        //解析json
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            List<String> list = mapper.readValue(data, List.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         ServiceResult result = new ServiceResult();
         result.succeed = true;
