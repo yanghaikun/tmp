@@ -96,9 +96,10 @@
         </section>
 
         <!-- Modal -->
+        <input id="input_operation" name="operation" type="hidden"/>
         <div class="modal fade" id="flightPlanModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
-                <div class="modal-content" style="margin-top: 35%;">
+                <div class="modal-content" style="margin-top: 10%;">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                         </button>
@@ -130,7 +131,7 @@
                             <tr>
                                 <th>勾选</th>
                                 <th>开始日期</th>
-                                <th>结束</th>
+                                <th>结束日期</th>
                                 <th>班期</th>
                                 <th>航班号</th>
                                 <th>运力</th>
@@ -138,6 +139,7 @@
                                 <th>落地站</th>
                                 <th>起飞时刻</th>
                                 <th>落地时刻</th>
+                                <th>变更</th>
                             </tr>
                             </thead>
                         </table>
@@ -150,30 +152,6 @@
             </div>
         </div>
     </div>
-
-
-    <div class="modal fade" id="flightModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="margin-top: 35%;">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">修改航线</h4>
-                </div>
-                <div class="modal-body" id="flightInfo">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
-                    <button type="button" class="btn btn-info" onclick="submit();">确定</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
 
     </div>
     <!-- /.content-wrapper -->

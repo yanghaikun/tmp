@@ -1,13 +1,13 @@
 package net.rlair.flight.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import net.rlair.flight.common.RecordStatus;
+
+import javax.persistence.*;
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 /**
  * @author Yang Haikun
@@ -51,11 +51,46 @@ public class FlightPlan implements Serializable{
 
     //计划开始时间
     @Column
-    private Date beginTime;
+    private Date startDate;
 
     //计划结束时间
     @Column
-    private Date endTime;
+    private Date endDate;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private RecordStatus status;
+
+    @Column
+    private String description;
+
+    @Transient
+    private boolean canceled = false;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public RecordStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(RecordStatus status) {
+        this.status = status;
+    }
+
+
+    public String getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
+    }
 
     public long getId() {
         return id;
@@ -113,19 +148,95 @@ public class FlightPlan implements Serializable{
         this.arrivalTime = arrivalTime;
     }
 
-    public Date getBeginTime() {
-        return beginTime;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setBeginTime(Date beginTime) {
-        this.beginTime = beginTime;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public Date getEndTime() {
-        return endTime;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    public void setCanceled(boolean canceled) {
+        this.canceled = canceled;
+    }
+
+    public List<Integer> getScheduleList() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Integer> list = null;
+        try {
+            list = objectMapper.readValue(this.schedule, List.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public FlightPlan copy(){
+        FlightPlan fp = new FlightPlan();
+        fp.setAirplane(this.airplane);
+        fp.setFlightNumber(this.flightNumber);
+        fp.setOriginCity(this.originCity);
+        fp.setDestinationCity(this.destinationCity);
+        fp.setDepartureTime(this.departureTime);
+        fp.setArrivalTime(this.arrivalTime);
+        fp.setStartDate(this.startDate);
+        fp.setEndDate(this.endDate);
+        fp.setSchedule(this.schedule);
+
+        return fp;
+    }
+
+    public String SQLWhere(){
+        String scheduleIn = "(";
+        List<Integer> sList = this.getScheduleList();
+        for (int i = 0; i < sList.size(); i++){
+            scheduleIn += sList.get(i);
+            if(i < sList.size() - 1){
+                scheduleIn += ",";
+            }
+        }
+        scheduleIn += ")";
+
+        StringBuilder sb = new StringBuilder()
+        .append(" WHERE flight_number = '").append(this.flightNumber).append("'")
+        .append(" AND origin_city = '").append(this.originCity).append("'")
+        .append(" AND destination_city = '").append(this.destinationCity).append("'")
+        .append(" AND date >= '").append(this.startDate).append("'")
+        .append(" AND date <= '").append(this.endDate).append("'")
+        .append(" AND day_of_week IN ").append(scheduleIn);
+
+        return sb.toString();
+    }
+
+    public String SQLUpdate(){
+        StringBuilder sb = new StringBuilder()
+        .append("UPDATE t_flight SET departure_time = '").append(this.departureTime).append("',")
+                .append(" arrival_time = '").append(this.arrivalTime).append("',")
+                .append(" airplane = '").append(this.airplane).append("',")
+                .append(" plan_id = ").append(this.id).append(",")
+                .append(" canceled = ").append(this.canceled ? 1 : 0).append(" ")
+                .append(SQLWhere());
+
+        return sb.toString();
+    }
+
+    public String SQLDelete(){
+        StringBuilder sb = new StringBuilder()
+                .append("DELETE FROM t_flight ")
+                .append(SQLWhere());
+
+        return sb.toString();
     }
 }

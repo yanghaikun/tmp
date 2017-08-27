@@ -145,7 +145,6 @@ Common.createPageTable = function(targerDomId, myajaxurl, myparam, mycolumns, my
                         success: function(result) {
                             //封装返回数据
                             var returnData = {};
-                            debugger
                             if (result.succeed) {
                                 returnData.draw = data.draw; //这里直接自行返回了draw计数器,应该由后台返回
                                 returnData.recordsTotal = result.totalRow; //返回数据全部记录

@@ -1,7 +1,8 @@
 <div xmlns="http://www.w3.org/1999/html" style="padding: 25px">
     <form id="flightPlanForm">
+
     <#if entity??>
-        <input name="id" type="hidden" value="${entity.id!}"/>
+        <input id="input_id" name="id" type="hidden" value="${entity.id?string("#")}"/>
     </#if>
         <div class="row">
             <div class="col-xs-6">
@@ -9,8 +10,8 @@
                     <div class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                     </div>
-                    <input type="text" class="form-control pull-right" id="input_beginTime" name="beginTime"
-                           placeholder="开始日期" <#if entity??>value="${entity.beginTime}" </#if>>
+                    <input type="text" class="form-control pull-right" id="input_startDate" name="startDate"
+                           placeholder="开始日期" <#if entity??>value="${entity.startDate?string("yyyy-MM-dd")}" </#if>>
                 </div>
             </div>
             <div class="col-xs-6">
@@ -18,24 +19,24 @@
                     <div class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                     </div>
-                    <input type="text" class="form-control pull-right" id="input_endTime" name="endTime"
-                           placeholder="开始日期" <#if entity??>value="${entity.endTime}" </#if>>
+                    <input type="text" class="form-control pull-right" id="input_endDate" name="endDate"
+                           placeholder="结束日期" <#if entity??>value="${entity.endDate?string("yyyy-MM-dd")}" </#if>>
                 </div>
         </div>
         </div>
         <div class="row" style="margin-top: 15px;">
             <div class="col-xs-3">
                 <input type="text" id="input_schedule" name="schedule" class="form-control" placeholder="班期"
-                       <#if entity??>value="${entity.schedule}" </#if> disabled="true">
+                       <#if entity??>value="${entity.schedule}" </#if>>
             </div>
             <div class="col-xs-9">
-                <input type="checkbox" id="1" value="一">一
-                <input type="checkbox" id="2" value="二">二
-                <input type="checkbox" id="3" value="三">三
-                <input type="checkbox" id="4" value="四">四
-                <input type="checkbox" id="5" value="五">五
-                <input type="checkbox" id="6" value="六">六
-                <input type="checkbox" id="7" value="日">日
+                <input type="checkbox" id="1" value="1">一
+                <input type="checkbox" id="2" value="2">二
+                <input type="checkbox" id="3" value="3">三
+                <input type="checkbox" id="4" value="4">四
+                <input type="checkbox" id="5" value="5">五
+                <input type="checkbox" id="6" value="6">六
+                <input type="checkbox" id="7" value="7">日
             </div>
         </div>
         <div class="row" style="margin-top: 15px;">

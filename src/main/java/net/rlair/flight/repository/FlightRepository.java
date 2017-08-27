@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @version 0.1.0.0
  */
 @Repository
-public interface FlightRepository extends JpaRepository<Flight, Long> {
+public interface FlightRepository extends JpaRepository<Flight, Long>, FlightCustome{
 }

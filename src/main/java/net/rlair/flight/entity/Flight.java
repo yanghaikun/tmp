@@ -1,13 +1,10 @@
 package net.rlair.flight.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import net.rlair.flight.common.RecordStatus;
+
+import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * @author Yang Haikun
@@ -20,6 +17,15 @@ public class Flight implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    /**
+     * 时间
+     */
+    @Column
+    private Date date;
+
+    @Column
+    private int dayOfWeek;
 
     /**
      * 航班号
@@ -58,10 +64,20 @@ public class Flight implements Serializable{
     private String arrivalTime;
 
     /**
-     * 开始时间
+     * 来自于那条航线计划
      */
     @Column
-    private Date beginTime;
+    private long planId;
+
+    /**
+     *是否已经删除
+     */
+    @Column
+    private boolean canceled;
+
+    @Transient
+    private RecordStatus status = RecordStatus.NONE;
+
 
     public long getId() {
         return id;
@@ -69,6 +85,22 @@ public class Flight implements Serializable{
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public int getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(int dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
     public String getFlightNumber() {
@@ -119,11 +151,83 @@ public class Flight implements Serializable{
         this.arrivalTime = arrivalTime;
     }
 
-    public Date getBeginTime() {
-        return beginTime;
+    public long getPlanId() {
+        return planId;
     }
 
-    public void setBeginTime(Date beginTime) {
-        this.beginTime = beginTime;
+    public void setPlanId(long planId) {
+        this.planId = planId;
+    }
+
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    public void setCanceled(boolean canceled) {
+        this.canceled = canceled;
+    }
+
+    public RecordStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(RecordStatus status) {
+        this.status = status;
+    }
+
+    /**
+     * 根据航线计划设置航班信息
+     * @param fp
+     */
+    public void copyFormPlan(FlightPlan fp){
+        this.setFlightNumber(fp.getFlightNumber());
+        this.setAirplane(fp.getAirplane());
+        this.setDepartureTime(fp.getDepartureTime());
+        this.setArrivalTime(fp.getArrivalTime());
+        this.setOriginCity(fp.getOriginCity());
+        this.setDestinationCity(fp.getDestinationCity());
+        this.setPlanId(fp.getId());
+    }
+
+    /**
+     * 判断航班是否匹配航线计划
+     * @param fp
+     * @return
+     */
+    public boolean matchPlan(FlightPlan fp){
+        //判断航班号
+        if(!(this.getFlightNumber().equals(fp.getFlightNumber()))){
+            return false;
+        }
+        //判断出发城市
+        if(!(this.getOriginCity().equals(fp.getOriginCity()))){
+            return false;
+        }
+        //判断到达城市
+        if(!(this.getDestinationCity().equals(fp.getDestinationCity()))){
+            return false;
+        }
+        //排期不满足
+        if(!(fp.getScheduleList().contains(this.getDayOfWeek()))){
+            return false;
+        }
+
+        //时间不满足
+        if(!((this.getDate().getTime() >= fp.getStartDate().getTime()) && (this.getDate().getTime() <= fp.getEndDate().getTime()))){
+            return false;
+        }
+
+        return true;
+    }
+
+    public String SQLUpdate(){
+        StringBuilder sb = new StringBuilder()
+                .append("UPDATE t_flight SET departure_time = '").append(this.departureTime).append("',")
+                .append(" arrival_time = '").append(this.arrivalTime).append("',")
+                .append(" airplane = '").append(this.airplane).append("',")
+                .append(" canceled = ").append(this.canceled ? 1 : 0).append(" ")
+                .append(" WHERE id = ").append(this.id).append(";");
+
+        return sb.toString();
     }
 }

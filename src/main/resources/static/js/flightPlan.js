@@ -1,5 +1,5 @@
 $(function () {
-    $("#input_beginTime, #input_endTime").datetimepicker({
+    $("#input_startDate, #input_endDate").datetimepicker({
         language: 'zh-CN',
         format: 'yyyy-mm-dd',
         minView: "month", //设置只显示到月份

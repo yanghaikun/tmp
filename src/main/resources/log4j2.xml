@@ -13,5 +13,16 @@
             <!-- <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/> -->
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} (%F:%M:%L) [%p][%c] %m%n"/>
         </Console>
+        <RollingRandomAccessFile name="File" fileName="/log4j2/rlair/ams.log"
+                                 filePattern="/log4j2/rlair/flight.log-%d{MM-dd-yyyy}-%i.log" >
+            <PatternLayout>
+                <charset>UTF-8</charset>
+                <Pattern>{"timstamp":"%d{yyyy-MM-dd HH:mm:ss,SSS}", "location":"(%F:%M:%L)", "level":"%p", "message":"%m"}%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 M"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20" fileIndex="max"/>
+        </RollingRandomAccessFile>
     </Appenders>
 </Configuration>
