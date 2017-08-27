@@ -20,21 +20,29 @@ public class FlightRepositoryImpl implements FlightCustome {
 
     @Override
     public void batchUpdate(List<Flight> flightList) {
-        StringBuilder sb = new StringBuilder();
+        //先创建临时表
+        String sql_tmp = "CREATE TEMPORARY TABLE IF NOT EXISTS t_flight_tmp LIKE t_flight;";
+        getSession().createSQLQuery(sql_tmp).executeUpdate();
+        sql_tmp = "TRUNCATE TABLE t_flight_tmp;";
+        getSession().createSQLQuery(sql_tmp).executeUpdate();
+
+
+        StringBuilder sql = new StringBuilder("INSERT INTO t_flight_tmp (`id`, `departure_time`, `arrival_time`, `airplane`, `canceled`) VALUES ");
         int count = flightList.size();
         for (int i = 0; i < count; ++i) {
-            if (i > 0 && i % batchSize == 0) {
-                getSession().createQuery(sb.toString()).executeUpdate();
+            Flight f = flightList.get(i);
+            sql.append(String.format("(%d, '%s', '%s', '%s', %d),", f.getId(), f.getDepartureTime(), f.getArrivalTime(), f.getAirplane(), f.isCanceled() ? 1 : 0));
+            if ((i > 0 && i % batchSize == 0) || (i == count - 1)) {
+                sql = sql.deleteCharAt(sql.lastIndexOf(","));
+                getSession().createSQLQuery(sql.toString()).executeUpdate();
                 em.flush();
                 em.clear();
-                sb = new StringBuilder();
+                sql = new StringBuilder("INSERT INTO t_flight_tmp (`id`, `departure_time`, `arrival_time`, `airplane`, `canceled`) VALUES ");
             }
-            sb.append(flightList.get(i).SQLUpdate());
         }
 
-        getSession().createQuery(sb.toString()).executeUpdate();
-        em.flush();
-        em.clear();
+        sql_tmp = "UPDATE t_flight f, t_flight_tmp tmp SET f.departure_time = tmp.departure_time, f.arrival_time = tmp.arrival_time, f.airplane=tmp.airplane, f.canceled = tmp.canceled WHERE f.id = tmp.id;";
+        getSession().createSQLQuery(sql_tmp).executeUpdate();
     }
 
     @Override

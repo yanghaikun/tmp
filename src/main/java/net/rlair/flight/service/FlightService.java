@@ -116,7 +116,7 @@ public class FlightService {
         }
         //根据条件增删改查
         //flightRepository.batchInsert(insert);
-        //flightRepository.batchUpdate(update);
+        flightRepository.batchUpdate(update);
         //flightRepository.delete(delete);
 
         //将所有航线计划置为已生效

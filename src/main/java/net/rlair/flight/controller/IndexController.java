@@ -50,6 +50,10 @@ public class IndexController {
 
         model.addAttribute("serverPath", "http://localhost:8080");
 
+        //test
+        //String sql_tmp = "CREATE TEMPORARY TABLE IF NOT EXISTS t_flight_tmp LIKE t_flight; TRUNCATE TABLE t_flight_tmp;";
+        //flightPlanRepository.executeSQL(sql_tmp);
+
         return "index";
     }
 
