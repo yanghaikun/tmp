@@ -115,9 +115,9 @@ public class FlightService {
             }
         }
         //根据条件增删改查
-        //flightRepository.batchInsert(insert);
+        flightRepository.batchInsert(insert);
         flightRepository.batchUpdate(update);
-        //flightRepository.delete(delete);
+        flightRepository.delete(delete);
 
         //将所有航线计划置为已生效
         for(FlightPlan fp : plans) {
@@ -132,6 +132,10 @@ public class FlightService {
         Log.FLIGHT.info("通过内存计算方式执行完毕，共插入{}条数据，修改{}条数据，删除{}条数据，共耗时{}ms", insert.size(), update.size(), delete.size(), (end - begin));
     }
 
+    /**
+     * 直接操作数据库修改航班动态
+     * @param publish
+     */
     @Transactional
     public void publishFlightPlanSlow(List<Long> publish){
         long begin = System.currentTimeMillis();

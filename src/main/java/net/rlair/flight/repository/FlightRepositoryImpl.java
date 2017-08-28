@@ -49,11 +49,11 @@ public class FlightRepositoryImpl implements FlightCustome {
     public void batchInsert(List<Flight> flightList) {
         int count = flightList.size();
         for (int i = 0; i < count; ++i) {
-            if (i > 0 && i % batchSize == 0) {
+            em.persist(flightList.get(i));
+            if ((i > 0 && i % batchSize == 0) || (i == count - 1)) {
                 em.flush();
                 em.clear();
             }
-            em.persist(flightList.get(i));
         }
     }
 
