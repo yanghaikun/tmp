@@ -188,8 +188,8 @@ public class IndexController {
         try {
             List<Long> list = mapper.readValue(data, new TypeReference<List<Long>>() {
             });
-            flightService.publishFlightPlan(list);
-            //flightService.publishFlightPlanSlow(list);
+            //flightService.publishFlightPlan(list);
+            flightService.publishFlightPlanSlow(list);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,12 +1,12 @@
 package net.rlair.flight.repository;
 
 import net.rlair.flight.entity.Flight;
-import net.rlair.flight.support.log.Log;
 import org.hibernate.Session;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -25,7 +25,6 @@ public class FlightRepositoryImpl implements FlightCustome {
         getSession().createSQLQuery(sql_tmp).executeUpdate();
         sql_tmp = "TRUNCATE TABLE t_flight_tmp;";
         getSession().createSQLQuery(sql_tmp).executeUpdate();
-
 
         StringBuilder sql = new StringBuilder("INSERT INTO t_flight_tmp (`id`, `departure_time`, `arrival_time`, `airplane`, `canceled`) VALUES ");
         int count = flightList.size();
@@ -47,14 +46,26 @@ public class FlightRepositoryImpl implements FlightCustome {
 
     @Override
     public void batchInsert(List<Flight> flightList) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        StringBuilder sql = new StringBuilder("INSERT INTO t_flight (`date`, `day_of_week`, `departure_time`, `arrival_time`, `origin_city`, `destination_city`,  `airplane`, `flight_number`, `canceled`, `plan_id`) VALUES ");
         int count = flightList.size();
         for (int i = 0; i < count; ++i) {
-            em.persist(flightList.get(i));
+            Flight f = flightList.get(i);
+            sql.append(String.format("('%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s'),", df.format(f.getDate()), f.getDayOfWeek(), f.getDepartureTime(), f.getArrivalTime(), f.getOriginCity(), f.getDestinationCity(), f.getAirplane(), f.getFlightNumber(), f.isCanceled() ? 1 : 0, f.getPlanId()));
             if ((i > 0 && i % batchSize == 0) || (i == count - 1)) {
+                sql = sql.deleteCharAt(sql.lastIndexOf(","));
+                getSession().createSQLQuery(sql.toString()).executeUpdate();
                 em.flush();
                 em.clear();
+                sql = new StringBuilder("INSERT INTO t_flight (`date`, `day_of_week`, `departure_time`, `arrival_time`, `origin_city`, `destination_city`,  `airplane`, `flight_number`, `canceled`, `plan_id`) VALUES ");
             }
         }
+    }
+
+    @Override
+    public List<Flight> findByQuery(String sql) {
+        List<Flight> result = getSession().createSQLQuery(sql).list();
+        return result;
     }
 
     /**

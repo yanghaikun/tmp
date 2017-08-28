@@ -15,4 +15,6 @@ public interface FlightCustome {
     void batchUpdate(List<Flight> flightList);
     @Transactional
     void batchInsert(List<Flight> flightList);
+
+    List<Flight> findByQuery(String sql);
 }
