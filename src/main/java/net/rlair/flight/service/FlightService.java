@@ -55,6 +55,10 @@ public class FlightService {
     }
 
 
+    /**
+     * 内存里直接修改动态航班，修改完毕后批量写回数据库
+     * @param publish
+     */
     @Transactional
     public void publishFlightPlanViaMemory(List<Long> publish) {
         long begin = System.currentTimeMillis();
