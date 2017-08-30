@@ -20,6 +20,9 @@ public class FlightRepositoryImpl implements FlightCustome {
 
     @Override
     public void batchUpdate(List<Flight> flightList) {
+        if (null == flightList || flightList.isEmpty()) {
+            return;
+        }
         //先创建临时表
         String sql_tmp = "CREATE TEMPORARY TABLE IF NOT EXISTS t_flight_tmp LIKE t_flight;";
         getSession().createSQLQuery(sql_tmp).executeUpdate();
@@ -46,6 +49,9 @@ public class FlightRepositoryImpl implements FlightCustome {
 
     @Override
     public void batchInsert(List<Flight> flightList) {
+        if (null == flightList || flightList.isEmpty()) {
+            return;
+        }
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         StringBuilder sql = new StringBuilder("INSERT INTO t_flight (`date`, `day_of_week`, `departure_time`, `arrival_time`, `origin_city`, `destination_city`,  `airplane`, `flight_number`, `canceled`, `plan_id`) VALUES ");
         int count = flightList.size();
@@ -60,6 +66,24 @@ public class FlightRepositoryImpl implements FlightCustome {
                 sql = new StringBuilder("INSERT INTO t_flight (`date`, `day_of_week`, `departure_time`, `arrival_time`, `origin_city`, `destination_city`,  `airplane`, `flight_number`, `canceled`, `plan_id`) VALUES ");
             }
         }
+    }
+
+    @Override
+    public void batchDelete(List<Flight> flightList) {
+        if (null == flightList || flightList.isEmpty()) {
+            return;
+        }
+        StringBuilder sql = new StringBuilder("DELETE FROM t_flight WHERE id IN(");
+        int count = flightList.size();
+        for (int i = 0; i < count; ++i) {
+            Flight f = flightList.get(i);
+            sql.append(f.getId()).append(",");
+        }
+        sql = sql.deleteCharAt(sql.lastIndexOf(","));
+        sql.append(");");
+        getSession().createSQLQuery(sql.toString()).executeUpdate();
+        em.flush();
+        em.clear();
     }
 
     @Override

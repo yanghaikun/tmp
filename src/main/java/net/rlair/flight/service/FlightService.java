@@ -56,7 +56,7 @@ public class FlightService {
 
 
     @Transactional
-    public void publishFlightPlan(List<Long> publish) {
+    public void publishFlightPlanViaMemory(List<Long> publish) {
         long begin = System.currentTimeMillis();
         //重新加载航线计划
         loadFlightPlan();
@@ -130,7 +130,7 @@ public class FlightService {
         //根据条件增删改查
         flightRepository.batchInsert(insert);
         flightRepository.batchUpdate(update);
-        flightRepository.delete(delete);
+        flightRepository.batchDelete(delete);
 
         //将所有航线计划置为已生效
         for (FlightPlan fp : plans) {
@@ -151,7 +151,7 @@ public class FlightService {
      * @param publish
      */
     @Transactional
-    public void publishFlightPlanSlow(List<Long> publish) {
+    public void publishFlightPlanViaSQL(List<Long> publish) {
         long begin = System.currentTimeMillis();
         //重新加载航线计划
         loadFlightPlan();

@@ -19,10 +19,13 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 此类没有被使用
+ */
 //此处是你dao文件所在的包名
-@EntityScan(basePackages={"net.rlair.flight.entity"})
-@EnableJpaRepositories(basePackages = {"net.rlair.flight.repository"})
-@EnableTransactionManagement
+//@EntityScan(basePackages={"net.rlair.flight.entity"})
+//@EnableJpaRepositories(basePackages = {"net.rlair.flight.repository"})
+//@EnableTransactionManagement
 public class JpaConfig {
 
     @Autowired

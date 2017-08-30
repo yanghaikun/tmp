@@ -8,7 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
- * Created by Kevin on 2017/8/27.
+ * @author Yang Haikun
  */
 public class FlightPlanRepositoryImpl implements FlightPlanCustome {
     //获取当前线程的EntityManager实例

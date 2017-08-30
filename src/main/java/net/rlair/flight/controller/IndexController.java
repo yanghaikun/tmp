@@ -1,6 +1,5 @@
 package net.rlair.flight.controller;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.rlair.flight.common.RecordStatus;
@@ -188,8 +187,8 @@ public class IndexController {
         try {
             List<Long> list = mapper.readValue(data, new TypeReference<List<Long>>() {
             });
-            //flightService.publishFlightPlan(list);
-            flightService.publishFlightPlanSlow(list);
+            flightService.publishFlightPlanViaMemory(list);
+            //flightService.publishFlightPlanViaSQL(list);
         } catch (IOException e) {
             e.printStackTrace();
         }
